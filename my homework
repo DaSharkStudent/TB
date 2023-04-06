@@ -1,0 +1,206 @@
+//字符串权重值最大
+#include<iostream>
+using namespace std;
+int main()
+{
+	char ch[200];
+	cin>>ch;
+	int cnt=sizeof(ch);
+	char *a=ch;
+	char *c;
+	char b[27]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+	char d[27];
+	d[0]=ch[0];
+	int dd=0;
+	int num[26];
+	int answer=0;
+	for(a=ch;*a!='\0';a++)
+	{
+		for(c=b;*c!='\0';c++)
+		{
+			if(*a==*c)
+			{
+				int i=c-b;
+				num[i]++;
+			}
+		}
+		for(dd=d;*dd!='\0';dd++)
+		{
+			if(*a==*dd)
+				break;
+			else 
+			{
+				int k=dd-d;
+				*(d+k+1)=*a;
+			}
+		}
+	}
+	
+	for(a=ch;*a!='\0';a++)
+	{
+		for(dd=d;*dd!='\0';dd++)
+		{
+			if(*a==*dd)
+			{
+				int k=dd-d;
+				answer+=26-k;
+			}
+		}
+	}
+
+	cout<<answer;
+	return 0;
+}
+//分数求和
+#include<iostream>
+#include<stdio.h>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+int gcd(int a, int b){   // 求最大公约数
+    if(b == 0) return a;
+    return gcd(b, a % b);
+}
+int main(){
+    int n;
+    cout<<"输入分数个数："; 
+    cin>>n;
+    int fz[n], fm[n];
+    for(int i=0;i<n;i++){
+        scanf("%d/%d",&fz[i],&fm[i]);
+        if(fm[i] == 0){  // 判断分母是否为0
+            cout<<"error"<<endl;
+            return 0;
+        }
+    }
+    int sum_fz = fz[0], sum_fm = fm[0];
+    for(int i=1;i<n;i++){
+        int tmp_fm = fm[i] * sum_fm / gcd(fm[i], sum_fm);
+        int tmp_fz1 = (tmp_fm * fz[i] )/ fm[i] ;
+        int tmp_fz2 = (tmp_fm *sum_fz)/ sum_fm;
+        sum_fz = tmp_fz1 + tmp_fz2;
+        sum_fm = tmp_fm;
+        int tmp_gcd = abs(gcd(sum_fz, sum_fm));  // 求最大公约数
+        sum_fz /= tmp_gcd;
+        sum_fm /= tmp_gcd;
+    }
+    if(sum_fm == 1){
+        cout<<sum_fz<<endl;  // 分母为1，直接输出分子
+    }else if(sum_fz == 0){
+        cout<<"0"<<endl;  // 分子为0，输出0
+    }else{
+        cout<<sum_fz<<"/"<<sum_fm<<endl;  // 输出分数
+    }
+    return 0;
+}
+//电子邮件地址
+#include <iostream>
+#include <string>
+#include <cctype>
+
+using namespace std;
+
+class EmailValidator {
+public:
+    EmailValidator() {}
+
+    bool isValidEmail(const string& email) {
+        int len = email.length();
+        int atPos = -1, dotPos = -1;
+
+        // 扫描字符串，判断@和.的位置
+        for (int i = 0; i < len; i++) {
+            char c = email[i];
+            if (c == '@') {
+                if (atPos != -1) {
+                    return false; // 多个@，非法
+                }
+                atPos = i;
+            } else if (c == '.') {
+                if (dotPos != -1) {
+                    return false; // 多个.，非法
+                }
+                if (i == atPos + 1 || i == len - 1) {
+                    return false; // .紧挨@后，或在最末位，非法
+                }
+                dotPos = i;
+            } else if (!isalnum(c) && c != '_' && c != '-') {
+                return false; // 非法字符，非法
+            }
+        }
+
+        // 检查@和.的位置
+        if (atPos == -1 || dotPos == -1 || atPos > dotPos) {
+            return false; // 缺少@或.，或它们的位置不对，非法
+        }
+
+        return true; // 合法
+    }
+};
+
+int main() {
+    EmailValidator validator;
+    string input;
+
+    cout << "请输入电子邮件地址：";
+    getline(cin, input);
+
+    if (validator.isValidEmail(input)) {
+        cout << "yes" << endl;
+    } else {
+        cout << "no" << endl;
+    }
+
+    return 0;
+}
+//只出现两次的数
+#include<iostream>
+using namespace std;
+int main()
+{
+	int n;
+	cin>>n;
+	int stack[20]={0};
+	for(int i=0;i<n;i++)
+	{
+		int k;
+		cin>>k;
+		stack[k]++;
+	}
+	int cnt=0;
+	for(int i=0;i<20;i++)
+	{
+		if(stack[i]==2){
+			cout<<i<<'\t';
+			cnt++;
+		}
+	}
+	if(cnt==0)
+		cout<<"none";
+}
+//三位整数的各位和
+#include<iostream>
+using namespace std;
+int main()
+{
+	int num;
+	cin>>num;
+	int n=0,k=num;
+	while(k>0)
+	{
+		k/=10;
+		n++;
+	}
+	if(n!=3)
+		cout<<"输入的不是三位数";
+	else
+	{
+		while(num>0)
+		{
+			k+=num%10;
+			num/=10;
+		}
+		cout<<k;
+	}
+	return 0;
+}
