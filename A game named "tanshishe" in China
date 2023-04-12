@@ -1,0 +1,343 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<windows.h>
+#include<malloc.h>
+#include<time.h>
+#include<stdbool.h>
+
+#define X 20
+#define Y 20
+
+enum Dir {enum_east,enum_south,enum_west,enum_north};
+
+struct Snake
+{
+	int iX,iY;
+	enum Dir emDir;			
+};
+
+struct Node
+{
+	struct Snake stSnake;
+	int iCount;
+	struct Node *pPre;
+	struct Node *pNext;	
+};
+
+struct Node *g_pHead=NULL;
+struct Node *g_pEnd=NULL;
+
+char g_Back[X][Y];
+void Head(void);
+void Frame(void);
+void GotoXY(unsigned short hang,unsigned short lie);
+void CreatSnake(int iCount);
+void Free();
+void DrawSnake(void);
+void Move(void);
+void Drop(void);
+void KeyState(void);
+void Food(void);
+void Appand(void);
+bool Eat(void);
+bool IsDie(void); 
+
+int main(void)
+{
+	srand((unsigned int)time(NULL));
+	Head();
+	Frame();
+	//GotoXY(5,10);
+	g_pHead;
+	CreatSnake(3);				
+	DrawSnake();
+	Food();
+	while(1)
+	{
+		KeyState();
+		if(true==Eat())
+		{
+			Food();
+		}
+		if(true==IsDie())
+		{
+			system("pause>0");
+		}
+		Drop();	
+		Move();
+		DrawSnake();
+		
+		
+		Sleep(1000);
+	}
+
+	
+	Free();
+	return 0;
+} 
+
+bool IsDie(void)								//撞边结束 
+{
+	if(1==g_Back[g_pHead->stSnake.iX][g_pHead->stSnake.iY])
+	{
+		GotoXY(50,50);
+		printf("Game over!");
+		return true;
+	}
+	return false;
+}
+
+void Appand(void)								//吃食后增加长度 
+{
+	//创建节点 
+	struct Node *pTemp=(struct Node*)malloc(sizeof(struct Node));
+	if(NULL==pTemp)
+		return;
+	//节点成员赋值 
+	pTemp->iCount++;
+	pTemp->pPre=NULL;
+	pTemp->pNext=NULL;
+	pTemp->stSnake.emDir=g_pEnd->stSnake.emDir;
+	switch(g_pEnd->stSnake.emDir)
+	{
+		case enum_east:
+			pTemp->stSnake.iX=g_pEnd->stSnake.iX;
+			pTemp->stSnake.iY=g_pEnd->stSnake.iY-1;
+			break;
+		case enum_south:
+			pTemp->stSnake.iX=g_pEnd->stSnake.iX-1;
+			pTemp->stSnake.iY=g_pEnd->stSnake.iY;
+			break;
+		case enum_west:
+			pTemp->stSnake.iX=g_pEnd->stSnake.iX;
+			pTemp->stSnake.iY=g_pEnd->stSnake.iY+1;
+			break;
+		case enum_north:
+			pTemp->stSnake.iX=g_pEnd->stSnake.iX+1;
+			pTemp->stSnake.iY=g_pEnd->stSnake.iY;
+			break;
+	}
+	//链接到链表的尾巴上 
+	pTemp->pPre=g_pEnd;
+	g_pEnd->pNext=pTemp;
+	g_pEnd=pTemp;
+	
+}
+
+bool Eat(void)									//判断是否吃食 
+{
+	if(2==g_Back[g_pHead->stSnake.iX][g_pHead->stSnake.iY])
+	{
+		g_Back[g_pHead->stSnake.iX][g_pHead->stSnake.iY]=0;
+		Appand();
+		return true;	
+	}	
+	return false;
+} 
+
+void Food(void)									//食物 
+{
+	while(1)
+	{
+		//产生一组坐标 
+		int x=rand()%(X-2)+1;
+		int y=rand()%(Y-2)+1;
+		//判断是否在蛇身上
+		struct Node *pT=g_pHead;
+		while(pT!=NULL)
+		{
+			if(x==pT->stSnake.iX&&y==pT->stSnake.iY)
+				break;
+			pT=pT->pNext;
+		}
+		//在的话就下一次 
+		if(NULL!=pT)
+			continue;
+		//不在，那就是合理的位置
+		else
+		{
+			g_Back[x][y]=2;
+			GotoXY(9+x,y*2+30);	
+			printf("□");
+			break;
+		} 
+	}
+}
+
+
+void KeyState(void)								//箭头控制转向 
+{
+	if(GetAsyncKeyState(VK_UP))
+	{
+		g_pHead->stSnake.emDir=enum_north;
+	}
+	else if(GetAsyncKeyState(VK_DOWN))
+	{
+		g_pHead->stSnake.emDir=enum_south;
+	}
+	else if(GetAsyncKeyState(VK_LEFT))
+	{
+		g_pHead->stSnake.emDir=enum_west;
+	}
+	else if(GetAsyncKeyState(VK_RIGHT))
+	{
+		g_pHead->stSnake.emDir=enum_east;
+	}
+}
+
+void Move(void)									//移动蛇 
+{
+	if(NULL==g_pHead)
+		return;
+	struct Node *pT=g_pEnd;
+	while(pT!=g_pHead)			
+	{
+		pT->stSnake=pT->pPre->stSnake;
+		pT=pT->pPre;
+	}
+	switch (g_pHead->stSnake.emDir)
+	{
+		case enum_east:
+			g_pHead->stSnake.iY++;
+			break;
+		case enum_south:
+			g_pHead->stSnake.iX++;
+			break;
+		case enum_west:
+			g_pHead->stSnake.iY--;
+			break;
+		case enum_north:
+			g_pHead->stSnake.iX--;
+			break;
+	}
+}
+
+void Drop(void)									//消除尾巴 
+{
+	GotoXY(9+g_pEnd->stSnake.iX,g_pEnd->stSnake.iY*2+30);
+	printf("  ");
+}
+
+void DrawSnake(void)							//画蛇 
+{
+	if(NULL==g_pHead)
+		return;
+	struct Node *pT=g_pHead;
+	while(pT!=NULL)
+	{
+		GotoXY(9+pT->stSnake.iX,pT->stSnake.iY*2+30);
+		printf("●");
+		pT=pT->pNext;
+	}
+} 
+
+void CreatSnake(int iCount)					//链表、节点 
+{
+	if(iCount<=0)
+		return;
+		int i;
+	for(i=0;i<iCount;i++)
+	{
+		//创建节点 
+		struct Node *pT=(struct Node*)malloc(sizeof(struct Node));
+		if(NULL==pT)
+			return ;
+		//节点成员赋值 
+		pT->iCount=0;
+		pT->pNext=NULL;
+		pT->pPre=NULL;
+		pT->stSnake.emDir=enum_west;
+		pT->stSnake.iX=0;
+		pT->stSnake.iY=0;
+		// 将节点连在链表上
+		if(NULL==g_pHead)
+		{
+			g_pHead=pT;
+			g_pEnd=pT;
+			
+			g_pHead->iCount=1;
+
+			g_pHead->stSnake.iX=rand()%(X-2)+1;
+			g_pHead->stSnake.iY=rand()%(Y-iCount-1)+1;
+		} 
+		else
+		{
+			g_pEnd->pNext=pT;
+			pT->pPre=g_pEnd;
+			g_pEnd=pT;
+			
+			g_pHead->iCount+=1;
+			
+			g_pEnd->stSnake.iX=g_pEnd->pPre->stSnake.iX;
+			
+			g_pEnd->stSnake.iY=g_pEnd->pPre->stSnake.iY+1;
+		}
+	}
+}
+
+void Free(void)
+{
+	if(NULL==g_pHead)
+		return;
+	struct Node *pT=g_pHead;
+	while(NULL!=pT)
+	{
+		//记录被删除的节点
+		struct Node *pp=pT; 
+		//节点往下走 
+		pT=pT->pNext;
+		//释放记录 
+		free(pp);
+	}
+	g_pHead=NULL;
+	g_pEnd=NULL;
+}
+
+void GotoXY(unsigned short hang,unsigned short lie)			//设置光标位置 
+{
+	COORD cd = {lie,hang};
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cd);
+}
+
+void Frame(void)											//边框赋值 
+{
+	int i;
+	for(i=0;i<X;i++)
+	{
+		int j;
+		for(j=0;j<Y;j++)
+		{
+			if(i==0||j==0||i==X-1||j==Y-1)
+				g_Back[i][j]=1;
+			else g_Back[i][j]=0;
+		}
+	}
+	for(i=0;i<X;i++)
+	{
+		GotoXY(i+9, 0);
+		printf("\t\t\t\t   ");
+		int j;
+		for(j=0;j<Y;j++)
+		{
+
+			if(g_Back[i][j]==1)
+				printf("■ ");
+			else 
+				printf("  ");
+		}
+		putchar('\n');
+	}	
+}
+
+void Head(void)												//提示文字 
+{
+	printf("\t\t\t\t\t>>>>>>>>>>  贪吃蛇  <<<<<<<<<<\n");
+	printf("\t\t\t\t\t>>>>>  Enter 启动/暂停   <<<<<\n");
+	printf("\t\t\t\t\t>>>>> ↑←↓→ 控制方向  <<<<<\n");
+	printf("\t\t\t\t\t>>>>>   1 查看历史记录   <<<<<\n");
+	printf("\t\t\t\t\t>>>>>   Q 重新开始       <<<<<\n");
+	printf("\t\t\t\t\t>>>>> tab 切换难度: 简单 <<<<<\n");
+	printf("\t\t\t\t\t>>>>>    当前长度: 0     <<<<<\n");
+	printf("\t\t\t\t\t>>>>>   ESC  退出游戏    <<<<<\n");
+	printf("\t\t\t\t\t>>>>>>>>>>>>>>><<<<<<<<<<<<<<<\n");
+}
