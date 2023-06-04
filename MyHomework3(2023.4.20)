@@ -1,0 +1,96 @@
+//3位整数的各位和
+/*#include <iostream>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    int sum = 0;
+    sum += n % 10;
+    n /= 10;
+    sum += n % 10;
+    n /= 10;
+    sum += n % 10;
+    cout << sum << endl;
+    return 0;
+}*/
+
+//季节转换
+/*#include <iostream>
+using namespace std;
+int main() {
+    int n;
+    cin >> n;
+    switch (n) {
+        case 1:
+            cout << "Spring" << endl;
+            break;
+        case 2:
+            cout << "Summer" << endl;
+            break;
+        case 3:
+            cout << "Fall" << endl;
+            break;
+        case 4:
+            cout << "Winter" << endl;
+            break;
+        default:
+            break;
+    }
+    return 0;
+}*/
+
+//年龄段转换
+/*#include <iostream>
+using namespace std;
+int main() {
+    int age;
+    cin >> age;
+    if (age >= 1 && age <= 10) {
+        cout << "Children" << endl;
+    } else if (age >= 11 && age <= 20) {
+        cout << "Teenagers" << endl;
+    } else if (age >= 21 && age <= 40) {
+        cout << "Youth" << endl;
+    } else if (age >= 41 && age <= 50) {
+        cout << "middle-aged" << endl;
+    } else if (age >= 51 && age <= 80) {
+        cout << "Elderly" << endl;
+    } else if (age >= 81 && age <= 100) {
+        cout << "Old man" << endl;
+    }
+    return 0;
+}*/
+
+//成绩转换
+/*#include <iostream>
+using namespace std;
+int main() {
+    int score;
+    cin >> score;
+    if (score >= 90) {
+        cout << "A" << endl;
+    } else if (score >= 80) {
+        cout << "B" << endl;
+    } else if (score >= 70) {
+        cout << "C" << endl;
+    } else if (score >= 60) {
+        cout << "D" << endl;
+    } else {
+        cout << "E" << endl;
+    }
+    return 0;
+}*/
+
+//时间换算
+/*#include <iostream>
+using namespace std;
+int main() {
+    int bjt;
+    cin >> bjt;
+    int utc = bjt - 800;
+    if (utc < 0) {
+        utc += 2400;
+    }
+    cout << utc / 1000 << (utc / 100) % 10 << ":" << (utc % 100) / 10 << utc % 10 << endl;
+    return 0;
+}*/
