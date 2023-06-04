@@ -1,0 +1,27 @@
+//设计 strstr 函数
+/*#include <iostream>
+#include <cstring>
+using namespace std;
+const int MAXN = 505;
+int mystrstr(const char* a, const char* b) {
+    int len1 = strlen(a), len2 = strlen(b);
+    for (int i = 0; i <= len1 - len2; i++) {
+        bool found = true;
+        for (int j = 0; j < len2; j++) {
+            if (a[i + j] != b[j]) {
+                found = false;
+                break;
+            }
+        }
+        if (found) {
+            return i;
+        }
+    }
+    return -1;
+}
+int main() {
+    char a[MAXN], b[MAXN];
+    cin >> a >> b;
+    cout << mystrstr(a, b) << endl;
+    return 0;
+}*/
