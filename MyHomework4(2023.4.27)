@@ -1,0 +1,149 @@
+//使用函数求奇数和
+/*#include <iostream>
+using namespace std;
+bool even(int n) {
+    if (n % 2 == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+int main() {
+    int n, sum = 0;
+    cin >> n;
+    while (n > 0) {
+        int temp;
+        cin >> temp;
+        if (!even(temp)) {
+            sum += temp;
+        }
+        n--;
+    }
+    cout << sum << endl;
+    return 0;
+}*/
+
+//求最大公约数和最小公倍数
+/*#include <iostream>
+using namespace std;
+int gcd(int a, int b) {
+    if (b == 0) {
+        return a;
+    } else {
+        return gcd(b, a % b);
+    }
+}
+int lcm(int a, int b) {
+    return a / gcd(a, b) * b;
+}
+int main() {
+    int a, b;
+    cin >> a >> b;
+    cout << gcd(a, b) << endl;
+    cout << lcm(a, b) << endl;
+    return 0;
+}*/
+
+//计算分数精确值
+/*#include <iostream>
+using namespace std;
+int main() {
+    int a, b;
+    cin >> a >> b;
+    cout << a / b << ".";
+    int remain = a % b;
+    for (int i = 0; i < 200; i++) {
+        remain *= 10;
+        cout << remain / b;
+        remain %= b;
+    }
+    cout << endl;
+    return 0;
+}*/
+
+//多项式加法
+/*#include <iostream>
+using namespace std;
+const int MAXN = 105;
+int main() {
+    int a[MAXN] = {0}, b[MAXN] = {0};
+    int k, e;
+    while (cin >> k >> e) {
+        a[e] += k;
+    }
+    while (cin >> k >> e) {
+        b[e] += k;
+    }
+    bool first = true;
+    for (int i = MAXN - 1; i >= 0; i--) {
+        if (a[i] + b[i] != 0) {
+            if (!first) {
+                cout << "+";
+            }
+            first = false;
+            if (i == 0) {
+                cout << a[i] + b[i];
+            } else if (i == 1) {
+                if (a[i] + b[i] == 1) {
+                    cout << "x";
+                } else if (a[i] + b[i] == -1) {
+                    cout << "-x";
+                } else {
+                    cout << a[i] + b[i] << "x";
+                }
+            } else {
+                if (a[i] + b[i] == 1) {
+                    cout << "x^" << i;
+                } else if (a[i] + b[i] == -1) {
+                    cout << "-x^" << i;
+                } else {
+                    cout << a[i] + b[i] << "x^" << i;
+                }
+            }
+        }
+    }
+    if (first) {
+        cout << "0";
+    }
+    cout << endl;
+    return 0;
+}*/ 
+
+//鞍点
+/*#include <iostream>
+using namespace std;
+const int MAXN = 105;
+int main() {
+    int n;
+    cin >> n;
+    int a[MAXN][MAXN];
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> a[i][j];
+        }
+    }
+    bool found = false;
+    for (int i = 0; i < n; i++) {
+        int row_max = a[i][0], col_min = a[0][i];
+        int row_index = i, col_index = i;
+        for (int j = 1; j < n; j++) {
+            if (a[i][j] > row_max) {
+                row_max = a[i][j];
+                row_index = j;
+            }
+            if (a[j][i] < col_min) {
+                col_min = a[j][i];
+                col_index = j;
+            }
+        }
+        if (row_index == col_index) {
+            found = true;
+            cout << row_index << " " << col_index << endl;
+            break;
+        }
+    }
+    if (!found) {
+        cout << "NO" << endl;
+    }
+    return 0;
+}*/
